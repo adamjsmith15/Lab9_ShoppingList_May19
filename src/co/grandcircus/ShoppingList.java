@@ -31,7 +31,6 @@ public class ShoppingList {
 			userInput = checkUserInput(userInput, marketItems);
 
 			addToCart(userInput, itemsInCart, pricesInCart, marketItems, itemPrice, quantityInCart);
-			System.out.println(quantityInCart);
 
 			stillShopping = continueShopping(scnr, "Would you like to order anything else (y/n)? ");
 			addSpacing(1);
