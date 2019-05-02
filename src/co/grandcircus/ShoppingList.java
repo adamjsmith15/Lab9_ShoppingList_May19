@@ -30,7 +30,7 @@ public class ShoppingList {
 			String userInput = Validator.getString(scnr, "What item would you like to order?  ");
 			userInput = checkUserInput(userInput, marketItems);
 
-			addToCart(userInput, itemsInCart, pricesInCart, marketItems, itemPrice, quantityInCart);
+			addToCart(userInput, itemsInCart, pricesInCart, marketItems, itemPrice, quantityInCart, scnr);
 
 			stillShopping = continueShopping(scnr, "Would you like to order anything else (y/n)? ");
 			addSpacing(1);
@@ -52,7 +52,7 @@ public class ShoppingList {
 		int counter = 0;
 		for (String item : items) {
 			// double itemPrice = (double)price[items.indexOf(item)];
-			System.out.printf("%d %-20s %-20s \n", counter + 1, item, price.get(counter));
+			System.out.printf("%d %-20s $%-20s \n", counter + 1, item, price.get(counter));
 			counter++;
 
 		}
@@ -95,7 +95,7 @@ public class ShoppingList {
 
 	public static boolean checkMenu(String userOrder, List<String> arr, List<Double> price) {
 		if (arr.contains(userOrder)) {
-			System.out.println("Adding " + userOrder + " to cart at " + price.get(arr.indexOf(userOrder)));
+			//System.out.println("Adding " + userOrder + " to cart at " + price.get(arr.indexOf(userOrder)));
 			addSpacing(1);
 			return true;
 		} else {
@@ -123,16 +123,18 @@ public class ShoppingList {
 	}
 
 	public static void addToCart(String userOrder, List<String> cartItems, List<Double> cartPrice, List<String> items,
-			List<Double> price, List<Integer> quantity) {
+			List<Double> price, List<Integer> quantity, Scanner sc) {
 		if (checkMenu(userOrder, items, price)) {
 			if (cartItems.contains(userOrder)) {
-				//quantity.add(items.indexOf(userOrder), quantity.get(items.indexOf(userOrder)) + 1);
-				quantity.set(items.indexOf(userOrder), quantity.get(items.indexOf(userOrder)) + 1);
+				int amount = Validator.getInt(sc, "How many would you like to order?");
+				quantity.set(items.indexOf(userOrder), (amount + quantity.get(items.indexOf(userOrder))));
+				System.out.println("Adding " + amount + " " + userOrder + "(s) to cart at $" + price.get(cartItems.indexOf(userOrder)) + " each.");
 			} else {
-				//quantity.add(items.indexOf(userOrder), quantity.get(items.indexOf(userOrder)) + 1);
-				quantity.set(items.indexOf(userOrder), quantity.get(items.indexOf(userOrder)) + 1);
+				int amount = Validator.getInt(sc, "How many would you like to order?");
+				quantity.set(items.indexOf(userOrder), amount);
 				cartItems.add(userOrder);
 				cartPrice.add(price.get(items.indexOf(userOrder)));
+				System.out.println("Adding " + amount + " " + userOrder + "(s) to cart at $" + price.get(cartItems.indexOf(userOrder)) + " each.");
 			}
 		} else {
 			System.out.println("Sorry, we dont' have those. Please try again. ");
@@ -145,12 +147,12 @@ public class ShoppingList {
 		System.out.println("Thanks for your order!");
 		System.out.println("Here's what you got:");
 		for (int i = 0; i < cartItems.size(); i++) {
-			System.out.printf("%-15s %-10s %d \n", cartItems.get(i), cartPrice.get(i), quantity.get(price.indexOf(cartPrice.get(i))));
+			System.out.printf("%-15s $%-10s %d \n", cartItems.get(i), cartPrice.get(i), quantity.get(price.indexOf(cartPrice.get(i))));
 		}
 		addSpacing(1);
 
 		System.out.print("Average price per item in order was ");
-		System.out.printf("%.2f \n", averagePrice(price, quantity));
+		System.out.printf("$%.2f \n", averagePrice(price, quantity));
 		addSpacing(1);
 	}
 
@@ -174,7 +176,7 @@ public class ShoppingList {
 			}
 		}
 		int indexOfMax = cartPrice.indexOf(max);
-		return "The most expensive item is " + cartItems.get(indexOfMax) + " at a price of " + cartPrice.get(indexOfMax)
+		return "The most expensive item is " + cartItems.get(indexOfMax) + " at a price of $" + cartPrice.get(indexOfMax)
 				+ ".";
 	}
 
@@ -189,7 +191,7 @@ public class ShoppingList {
 			}
 		}
 		int indexOfMin = cartPrice.indexOf(min);
-		return "The lease expensive item is " + cartItems.get(indexOfMin) + " at a price of "
+		return "The lease expensive item is " + cartItems.get(indexOfMin) + " at a price of $"
 				+ cartPrice.get(indexOfMin) + ".";
 	}
 	
